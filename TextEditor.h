@@ -1,12 +1,15 @@
-//
-// Created by kvita on 26.06.2024.
-//
-
 #ifndef PARADIGMS_PA_4_TEXTEDITOR_H
 #define PARADIGMS_PA_4_TEXTEDITOR_H
+#include "TextProcessor.h"
 
+class TextEditor{
+public:
+    void run();
 
-class TextEditor {
+private:
+    char*  getTextInput();
+    TextProcessor textProcessor = TextProcessor();
+    char* processFile(bool encode   );
 
 };
 
