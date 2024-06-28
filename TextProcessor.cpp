@@ -53,8 +53,8 @@ int TextProcessor::encryptText( char* inputFilePath, char* outputFilePath, int k
         return -1;
     }
 
-    char line[100];
-    while (file.getline(line, 100)) {
+    char line[200];
+    while (file.getline(line, 200)) {
         if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
         }
