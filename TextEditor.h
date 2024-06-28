@@ -9,7 +9,7 @@ public:
 private:
     char*  getTextInput();
     TextProcessor textProcessor = TextProcessor();
-    char* processFile(bool encode   );
+    int processFile(bool encode);
 
 };
 

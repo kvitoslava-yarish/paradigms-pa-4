@@ -4,46 +4,66 @@
 #include "TextProcessor.h"
 #include "CaesarCipher.h"
 
-int TextProcessor:: encryptText(char* outputFilePath, char* inputFilePath, int key, bool encode)
-{
-
-    FILE* file = fopen(inputFilePath, "r");
+//int TextProcessor:: encryptText(char* outputFilePath, char* inputFilePath, int key, bool encode)
+//{
+//
+//    FILE* file = fopen(inputFilePath, "r");
+//    if (!file) {
+//        std::cout << "Not able to open the file.\n";
+//        return -1;
+//    }
+//    int line_size = 100;
+//    char *line = new char[line_size];
+//    char chunk[100];
+//    if (line == nullptr) {
+//        std::cout << "Unable to allocate memory for the line buffer";
+//    }
+//
+//    while (fgets(chunk, sizeof(chunk), file)) {
+//        if (line_size  < sizeof(chunk)) {
+//            line_size *= 2;
+//            char *temp = new char[line_size];
+//            if (temp == nullptr) {
+//                std::cout << "Unable to reallocate memory for the line buffer";
+//                delete[] line;
+//            }
+//            line = temp;
+//        }
+//        strcpy(line, chunk);
+//        if (line[strlen(line) - 1] == '\n') {
+//            line[strlen(line) - 1] = '\0';
+//            std::cout<< line;
+//            char* codedLine = (encode) ? encodeLine(line, key) : decodeLine(line, key);
+//            lineToFile(codedLine, outputFilePath);
+//        }
+//    }
+//    if (strlen(line) > 0) {
+//        std::cout<< line;
+//        char* codedLine = (encode) ? encodeLine(line, key) : decodeLine(line, key);
+//        lineToFile(codedLine, outputFilePath);
+//
+//    }
+//    delete[] line;
+//    fclose(file);
+//}
+int TextProcessor::encryptText( char* inputFilePath, char* outputFilePath, int key, bool encode) {
+    std::ifstream file(inputFilePath);
     if (!file) {
-        std::cout << "Not able to open the file.\n";
+        std::cerr << "Not able to open the file.\n";
         return -1;
     }
-    int line_size = 100;
-    char *line = new char[line_size];
-    char chunk[100];
-    if (line == nullptr) {
-        std::cout << "Unable to allocate memory for the line buffer";
-    }
 
-    while (fgets(chunk, sizeof(chunk), file)) {
-        if (line_size  < sizeof(chunk)) {
-            line_size *= 2;
-            char *temp = new char[line_size];
-            if (temp == nullptr) {
-                std::cout << "Unable to reallocate memory for the line buffer";
-                delete[] line;
-            }
-            line = temp;
-        }
-        strcpy(line, chunk);
+    char line[100];
+    while (file.getline(line, 100)) {
         if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
-            std::cout<< line;
-            char* codedLine = (encode) ? encodeLine(line, key) : decodeLine(line, key);
-            lineToFile(codedLine, outputFilePath);
         }
-    }
-    if (strlen(line) > 0) {
-        std::cout<< line;
-        char* codedLine = (encode) ? encodeLine(line, key) : decodeLine(line, key);
+        char* codedLine = (encode)? encodeLine(line, key) : decodeLine(line, key);
         lineToFile(codedLine, outputFilePath);
+        delete[] codedLine;
     }
-    delete[] line;
-    fclose(file);
+    file.close();
+    return 0;
 }
 
 char* TextProcessor :: encodeLine(char* line, int key)
@@ -64,7 +84,7 @@ int TextProcessor:: lineToFile(char* line, char* filePath) {
         std::cerr << "Error opening file: " << filePath << std::endl;
         return -1;
     }
-    outputFile << line << std::endl;  // Write line to file followed by a newline
-    outputFile.close();  // Close the file
+    outputFile << line << std::endl;
+    outputFile.close();
     return 0;
 }

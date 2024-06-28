@@ -3,6 +3,9 @@
 #include <cstdio>
 #include "iostream"
 #include "TextProcessor.h"
+#include <sstream>
+#include <string>
+#include <limits>
 
 char* TextEditor::getTextInput() {
     int size = 10;
@@ -24,22 +27,37 @@ char* TextEditor::getTextInput() {
     text[index] = '\0';
     return text;
 }
-char* TextEditor:: processFile(bool encode)
-{
-    std:: cout <<"enter input file";
+int TextEditor::processFile(bool encode) {
+    std::string input;
+    std::cout << "Enter input file: ";
     char* inputFilePath = getTextInput();
-    std:: cout <<"\n enter output file";
-    char* outputFilePath = getTextInput();
-    std:: cout <<"\n enter key";
-    int key = scanf("%d");
-    textProcessor.encryptText(outputFilePath, inputFilePath, key, encode);
 
+    std::cout << "Enter output file: ";
+    char* outputFilePath = getTextInput();
+
+    int key;
+    std::cout << "Enter key: ";
+    std::cin >> key;
+
+    if (std::cin.fail()) {
+        std::cin.clear(); // Clear error flag
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard invalid input
+        std::cout << "Invalid input for key. Please enter an integer." << std::endl;
+        delete[] inputFilePath, outputFilePath;
+        return -1;
+    }
+
+    textProcessor.encryptText(inputFilePath, outputFilePath, key, encode);
+
+    delete inputFilePath;
+    delete outputFilePath;
+    return 0;
 }
 void TextEditor:: run() {
     while(true) {
         fflush(stdin);
         setbuf(stdout, 0);
-        std::cout << "\nChoose action  1 - encrypt, 2 - decrypt\n";
+        std::cout << "\nChoose action  1 - encrypt, 2 - decrypt, 3 -exit \n";
         int choice;
         scanf("%d", &choice);
         getchar();
@@ -50,6 +68,8 @@ void TextEditor:: run() {
             case 2:
                 processFile(false);
                 break;
+            case 3:
+                exit(0);
             default:
                 std::cout << "enter proper command";
         }
